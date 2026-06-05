@@ -35,14 +35,18 @@ export function canAddTaskToDay(
   }
 
   export function getOverloadedFixedDaysWarnings(week: WeekPlan): string[] {
-    return week
-      .filter((day) => {
-        const fixedEnergy = day.fixedEvents.reduce(
-          (sum, event) => sum + event.energyCost,
-          0
-        );
+    const warnings: string[] = [];
   
-        return fixedEnergy > 10;
-      })
-      .map((day) => `Fixed events on ${day.day} exceed energy limit`);
+    for (const day of week) {
+      const fixedEnergy = day.fixedEvents.reduce(
+        (sum, event) => sum + event.energyCost,
+        0
+      );
+  
+      if (fixedEnergy > 10) {
+        warnings.push(`Fixed events on ${day.day} exceed energy limit`);
+      }
+    }
+  
+    return warnings;
   }
