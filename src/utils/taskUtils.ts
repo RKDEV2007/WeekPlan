@@ -1,5 +1,6 @@
 import type {
     FlexibleTask,
+    Priority,
     ScheduledFlexibleTask,
   } from "../types/planner";
 
@@ -25,3 +26,20 @@ import type {
   
     return scheduledTasks;
   }
+
+  const priorityWeights: Record<Priority, number> = {
+    low: 1,
+    medium: 2,
+    high: 3,
+};
+
+  export function sortTasksForScheduling(
+    tasks: ScheduledFlexibleTask[]
+  ): ScheduledFlexibleTask[] {
+    const sortedTasks = [...tasks];
+    return sortedTasks.sort((a, b) => {
+        const priorityDiff = priorityWeights[b.priority] - priorityWeights[a.priority];
+        return priorityDiff !== 0 ? priorityDiff : b.energyCost - a.energyCost;
+    });
+  }
+  

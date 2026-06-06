@@ -1,9 +1,10 @@
 import type {
     DayPlan,
     DayStatus,
+    ScheduledFlexibleTask,
     WeekDay,
     WeekPlan,
-    FixedEvent
+    FixedEvent,
   } from "../types/planner";
   
   export const WEEK_DAYS: WeekDay[] = [
@@ -76,4 +77,15 @@ import type {
   
       return updateDayStats(updatedDay);
     });
+  }
+
+  export function addFlexibleTaskToDay(
+    day: DayPlan,
+    task: ScheduledFlexibleTask
+  ): DayPlan {
+    const updatedDay = {
+        ...day,
+        flexibleTasks: [...day.flexibleTasks, task],
+    };
+    return updateDayStats(updatedDay);
   }

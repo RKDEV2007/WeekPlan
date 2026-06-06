@@ -1,54 +1,52 @@
-import type { FixedEvent } from "./types/planner";
-import { addFixedEventsToWeek, createEmptyWeek } from "./utils/weekUtils";
-import { getOverloadedFixedDaysWarnings } from "./utils/plannerRules";
+import type { FlexibleTask } from "./types/planner";
+import {
+  expandFlexibleTasks,
+  sortTasksForScheduling,
+} from "./utils/taskUtils";
 
 function App() {
-  const fixedEvents: FixedEvent[] = [
+  const flexibleTasks: FlexibleTask[] = [
     {
-      id: "fixed-1",
-      title: "Driving lesson",
-      day: "monday",
-      startTime: "12:00",
-      endTime: "13:30",
+      id: "japanese",
+      title: "Japanese",
+      durationMinutes: 30,
+      priority: "medium",
+      energyCost: 2,
+      frequencyPerWeek: 3,
+    },
+    {
+      id: "pdd",
+      title: "PDD",
+      durationMinutes: 45,
+      priority: "high",
       energyCost: 3,
     },
     {
-      id: "fixed-2",
-      title: "College classes",
-      day: "tuesday",
-      startTime: "09:00",
-      endTime: "14:00",
-      energyCost: 5,
+      id: "design",
+      title: "Design practice",
+      durationMinutes: 60,
+      priority: "low",
+      energyCost: 4,
     },
     {
-      id: "fixed-3",
-      title: "Exam",
-      day: "friday",
-      startTime: "10:00",
-      endTime: "12:00",
-      energyCost: 6,
-    },
-    {
-      id: "fixed-4",
-      title: "Hard meeting",
-      day: "friday",
-      startTime: "15:00",
-      endTime: "17:00",
+      id: "interview",
+      title: "Interview preparation",
+      durationMinutes: 60,
+      priority: "high",
       energyCost: 5,
     },
   ];
 
-  const emptyWeek = createEmptyWeek();
-  const weekWithFixedEvents = addFixedEventsToWeek(emptyWeek, fixedEvents);
-  const warnings = getOverloadedFixedDaysWarnings(weekWithFixedEvents);
+  const expandedTasks = expandFlexibleTasks(flexibleTasks);
+  const sortedTasks = sortTasksForScheduling(expandedTasks);
 
-  console.log("weekWithFixedEvents:", weekWithFixedEvents);
-  console.log("warnings:", warnings);
+  console.log("expandedTasks:", expandedTasks);
+  console.log("sortedTasks:", sortedTasks);
 
   return (
     <main>
       <h1>Week Planner MVP</h1>
-      <p>Open the browser console to check generated week data.</p>
+      <p>Open the browser console to check sorted flexible tasks.</p>
     </main>
   );
 }
