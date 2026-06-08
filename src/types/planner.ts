@@ -57,3 +57,8 @@ export type GenerateWeekResult = {
   unscheduledTasks: ScheduledFlexibleTask[];
   warnings: string[];
 };
+
+export type ScheduleTaskResult = {
+  week: WeekPlan;
+  scheduled: boolean;
+}

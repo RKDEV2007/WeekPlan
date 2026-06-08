@@ -1,10 +1,10 @@
-import type { DayPlan, ScheduledFlexibleTask, WeekPlan } from "../types/planner";
+import type { DayPlan, ScheduledFlexibleTask, ScheduleTaskResult, WeekPlan } from "../types/planner";
 import {
   canAddTaskToDay,
   canAddTaskToLightDay,
   canAddTaskToRestDay,
 } from "./plannerRules";
-import { calculateDayEnergy } from "./weekUtils";
+import { addFlexibleTaskToDay, calculateDayEnergy } from "./weekUtils";
 
 function canAddTaskRespectingDayMode(
     day: DayPlan,
@@ -37,4 +37,31 @@ function canAddTaskRespectingDayMode(
   
       return currentDayEnergy < bestDayEnergy ? currentDay : bestDay;
     });
+  }
+
+  export function scheduleTaskInWeek(
+    week: WeekPlan,
+    task: ScheduledFlexibleTask
+  ): ScheduleTaskResult {
+    const bestDay = findBestDayForTask(week, task);
+  
+    if (!bestDay) {
+      return {
+        week,
+        scheduled: false,
+      };
+    }
+  
+    const updatedWeek = week.map((day) => {
+      if (day.day === bestDay.day) {
+        return addFlexibleTaskToDay(day, task);
+      }
+  
+      return day;
+    });
+  
+    return {
+      week: updatedWeek,
+      scheduled: true,
+    };
   }
