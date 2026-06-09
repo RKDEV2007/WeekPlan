@@ -1,52 +1,97 @@
-import type { FlexibleTask } from "./types/planner";
-import {
-  expandFlexibleTasks,
-  sortTasksForScheduling,
-} from "./utils/taskUtils";
+import { useState } from "react";
+import type {
+  FixedEvent,
+  FlexibleTask,
+  GenerateWeekResult,
+} from "./types/planner";
+import { FixedEventForm } from "./components/FixedEventForm";
+import { FlexibleTaskForm } from "./components/FlexibleTaskForm";
+import { generateWeekPlan } from "./utils/generateWeekPlan";
 
 function App() {
-  const flexibleTasks: FlexibleTask[] = [
-    {
-      id: "japanese",
-      title: "Japanese",
-      durationMinutes: 30,
-      priority: "medium",
-      energyCost: 2,
-      frequencyPerWeek: 3,
-    },
-    {
-      id: "pdd",
-      title: "PDD",
-      durationMinutes: 45,
-      priority: "high",
-      energyCost: 3,
-    },
-    {
-      id: "design",
-      title: "Design practice",
-      durationMinutes: 60,
-      priority: "low",
-      energyCost: 4,
-    },
-    {
-      id: "interview",
-      title: "Interview preparation",
-      durationMinutes: 60,
-      priority: "high",
-      energyCost: 5,
-    },
-  ];
+  const [fixedEvents, setFixedEvents] = useState<FixedEvent[]>([]);
+  const [flexibleTasks, setFlexibleTasks] = useState<FlexibleTask[]>([]);
+  const [result, setResult] = useState<GenerateWeekResult | null>(null);
 
-  const expandedTasks = expandFlexibleTasks(flexibleTasks);
-  const sortedTasks = sortTasksForScheduling(expandedTasks);
+  function handleAddFixedEvent(event: FixedEvent) {
+    setFixedEvents((prev) => [...prev, event]);
+  }
 
-  console.log("expandedTasks:", expandedTasks);
-  console.log("sortedTasks:", sortedTasks);
+  function handleAddFlexibleTask(task: FlexibleTask) {
+    setFlexibleTasks((prev) => [...prev, task]);
+  }
+
+  function handleGenerateWeek() {
+    const generatedResult = generateWeekPlan(fixedEvents, flexibleTasks);
+    setResult(generatedResult);
+
+    console.log("Generated week result:", generatedResult);
+  }
 
   return (
     <main>
       <h1>Week Planner MVP</h1>
-      <p>Open the browser console to check sorted flexible tasks.</p>
+
+      <section>
+        <h2>Add fixed event</h2>
+        <FixedEventForm onAddFixedEvent={handleAddFixedEvent} />
+      </section>
+
+      <section>
+        <h2>Add flexible task</h2>
+        <FlexibleTaskForm onAddFlexibleTask={handleAddFlexibleTask} />
+      </section>
+
+      <section>
+        <h2>Fixed events</h2>
+
+        {fixedEvents.length === 0 ? (
+          <p>No fixed events yet</p>
+        ) : (
+          <ul>
+            {fixedEvents.map((event) => (
+              <li key={event.id}>
+                <strong>{event.title}</strong> — {event.day},{" "}
+                {event.startTime || "no start time"} -{" "}
+                {event.endTime || "no end time"}, energy: {event.energyCost}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section>
+        <h2>Flexible tasks</h2>
+
+        {flexibleTasks.length === 0 ? (
+          <p>No flexible tasks yet</p>
+        ) : (
+          <ul>
+            {flexibleTasks.map((task) => (
+              <li key={task.id}>
+                <strong>{task.title}</strong> — priority: {task.priority},
+                duration: {task.durationMinutes} min, energy:{" "}
+                {task.energyCost}, frequency: {task.frequencyPerWeek ?? 1}
+                {task.deadlineDay ? `, deadline: ${task.deadlineDay}` : ""}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <button type="button" onClick={handleGenerateWeek}>
+        Generate Week
+      </button>
+
+      <section>
+        <h2>Generated result</h2>
+
+        {result === null ? (
+          <p>No generated result yet</p>
+        ) : (
+          <pre>{JSON.stringify(result, null, 2)}</pre>
+        )}
+      </section>
     </main>
   );
 }
