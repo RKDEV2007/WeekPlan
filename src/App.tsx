@@ -4,8 +4,13 @@ import type {
   FlexibleTask,
   GenerateWeekResult,
 } from "./types/planner";
+
 import { FixedEventForm } from "./components/FixedEventForm";
 import { FlexibleTaskForm } from "./components/FlexibleTaskForm";
+import { WeekView } from "./components/WeekView";
+import { WarningsList } from "./components/WarningsList";
+import { UnscheduledTasksList } from "./components/UnscheduledTasksList";
+
 import { generateWeekPlan } from "./utils/generateWeekPlan";
 
 function App() {
@@ -89,7 +94,11 @@ function App() {
         {result === null ? (
           <p>No generated result yet</p>
         ) : (
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+          <>
+            <WarningsList warnings={result.warnings} />
+            <WeekView weekPlan={result.weekPlan} />
+            <UnscheduledTasksList tasks={result.unscheduledTasks} />
+          </>
         )}
       </section>
     </main>
