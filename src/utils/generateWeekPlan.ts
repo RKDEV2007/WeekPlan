@@ -3,7 +3,6 @@ import type {
     FlexibleTask,
     GenerateWeekResult,
     ScheduledFlexibleTask,
-    WeekPlan,
   } from "../types/planner";
 
   import {

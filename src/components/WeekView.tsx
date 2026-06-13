@@ -1,4 +1,5 @@
 import type { WeekPlan } from "../types/planner";
+import "./WeekView.css";
 import { DayCard } from "./DayCard";
 
 export function WeekView({ weekPlan }: { weekPlan: WeekPlan }) {

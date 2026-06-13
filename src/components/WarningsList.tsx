@@ -1,17 +1,20 @@
+import "./WarningsList.css";
+
 export function WarningsList({ warnings }: { warnings: string[] }) {
-    return (
-      <section>
-        <h2>Warnings</h2>
-  
-        {warnings.length === 0 ? (
-          <p>No warnings</p>
-        ) : (
-          <ul>
-            {warnings.map((warning, index) => (
-              <li key={`${warning}-${index}`}>{warning}</li>
-            ))}
-          </ul>
-        )}
-      </section>
-    );
+  if (warnings.length === 0) {
+    return null;
   }
+
+  return (
+    <section className="warnings-section" aria-labelledby="warnings-heading">
+      <h2 id="warnings-heading">Предупреждения</h2>
+      <ul className="warning-list">
+        {warnings.map((warning, index) => (
+          <li key={`${warning}-${index}`} className="warning-item">
+            {warning}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

@@ -1,0 +1,74 @@
+.day-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: left;
+}
+
+.day-card__header {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.day-card__block {
+  margin-top: 12px;
+}
+
+.day-card__block ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day-card__item {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text);
+  padding: 8px;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+.day-card__item strong {
+  color: var(--text-h);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge--ok {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.status-badge--neutral {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.status-badge--warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.status-badge--overloaded {
+  background: var(--error-bg);
+  color: var(--error);
+}

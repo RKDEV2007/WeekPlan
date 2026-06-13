@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Form.css";
 import type { FlexibleTask, Priority, WeekDay } from "../types/planner";
 
 type FlexibleTaskFormProps = {
@@ -8,6 +9,8 @@ type FlexibleTaskFormProps = {
 export function FlexibleTaskForm({
   onAddFlexibleTask,
 }: FlexibleTaskFormProps) {
+  const [error, setError] = useState("");
+
   const [title, setTitle] = useState("");
   const [durationMinutes, setDurationMinutes] = useState("");
   const [priority, setPriority] = useState<Priority>("medium");
@@ -19,14 +22,28 @@ export function FlexibleTaskForm({
     e.preventDefault();
 
     if (!title.trim()) {
+      setError("Укажите название");
       return;
     }
 
     const duration = Number(durationMinutes);
     const energy = Number(energyCost);
-    const frequency = frequencyPerWeek ? Number(frequencyPerWeek) : undefined;
+    const frequency = frequencyPerWeek
+      ? Number(frequencyPerWeek)
+      : undefined;
 
-    if (duration <= 0 || energy <= 0) {
+    if (duration <= 0) {
+      setError("Длительность должна быть больше 0");
+      return;
+    }
+
+    if (energy <= 0) {
+      setError("Энергия должна быть больше 0");
+      return;
+    }
+
+    if (frequency !== undefined && frequency <= 0) {
+      setError("Частота должна быть больше 0");
       return;
     }
 
@@ -48,62 +65,96 @@ export function FlexibleTaskForm({
     setEnergyCost("");
     setFrequencyPerWeek("");
     setDeadlineDay("");
+    setError("");
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Task title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+    <form className="form" onSubmit={handleSubmit}>
+      <div className="form-row">
+        <label htmlFor="flexible-task-title">Название</label>
+        <input
+          id="flexible-task-title"
+          type="text"
+          placeholder="Например: Прочитать главу"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
 
-      <input
-        type="number"
-        placeholder="Duration minutes"
-        value={durationMinutes}
-        onChange={(e) => setDurationMinutes(e.target.value)}
-      />
+      <div className="form-row">
+        <label htmlFor="flexible-task-duration">Длительность (мин)</label>
+        <input
+          id="flexible-task-duration"
+          type="number"
+          placeholder="30"
+          min="1"
+          value={durationMinutes}
+          onChange={(e) => setDurationMinutes(e.target.value)}
+        />
+      </div>
 
-      <select
-        value={priority}
-        onChange={(e) => setPriority(e.target.value as Priority)}
-      >
-        <option value="low">Low priority</option>
-        <option value="medium">Medium priority</option>
-        <option value="high">High priority</option>
-      </select>
+      <div className="form-row">
+        <label htmlFor="flexible-task-priority">Приоритет</label>
+        <select
+          id="flexible-task-priority"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value as Priority)}
+        >
+          <option value="low">Низкий</option>
+          <option value="medium">Средний</option>
+          <option value="high">Высокий</option>
+        </select>
+      </div>
 
-      <input
-        type="number"
-        placeholder="Energy cost"
-        value={energyCost}
-        onChange={(e) => setEnergyCost(e.target.value)}
-      />
+      <div className="form-row">
+        <label htmlFor="flexible-task-energy">Энергия</label>
+        <input
+          id="flexible-task-energy"
+          type="number"
+          placeholder="1"
+          min="1"
+          value={energyCost}
+          onChange={(e) => setEnergyCost(e.target.value)}
+        />
+      </div>
 
-      <input
-        type="number"
-        placeholder="Frequency per week"
-        value={frequencyPerWeek}
-        onChange={(e) => setFrequencyPerWeek(e.target.value)}
-      />
+      <div className="form-row">
+        <label htmlFor="flexible-task-frequency">Частота в неделю</label>
+        <input
+          id="flexible-task-frequency"
+          type="number"
+          placeholder="1"
+          min="1"
+          value={frequencyPerWeek}
+          onChange={(e) => setFrequencyPerWeek(e.target.value)}
+        />
+      </div>
 
-      <select
-        value={deadlineDay}
-        onChange={(e) => setDeadlineDay(e.target.value as WeekDay | "")}
-      >
-        <option value="">No deadline</option>
-        <option value="monday">Monday</option>
-        <option value="tuesday">Tuesday</option>
-        <option value="wednesday">Wednesday</option>
-        <option value="thursday">Thursday</option>
-        <option value="friday">Friday</option>
-        <option value="saturday">Saturday</option>
-        <option value="sunday">Sunday</option>
-      </select>
+      <div className="form-row">
+        <label htmlFor="flexible-task-deadline">Дедлайн</label>
+        <select
+          id="flexible-task-deadline"
+          value={deadlineDay}
+          onChange={(e) => setDeadlineDay(e.target.value as WeekDay | "")}
+        >
+          <option value="">Без дедлайна</option>
+          <option value="monday">Понедельник</option>
+          <option value="tuesday">Вторник</option>
+          <option value="wednesday">Среда</option>
+          <option value="thursday">Четверг</option>
+          <option value="friday">Пятница</option>
+          <option value="saturday">Суббота</option>
+          <option value="sunday">Воскресенье</option>
+        </select>
+      </div>
 
-      <button type="submit">Add flexible task</button>
+      {error && <p className="form-error" role="alert">{error}</p>}
+
+      <div className="form-actions">
+        <button type="submit" className="btn-secondary">
+          Добавить задачу
+        </button>
+      </div>
     </form>
   );
 }

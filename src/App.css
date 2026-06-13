@@ -1,0 +1,39 @@
+.app-header {
+  margin-bottom: 32px;
+}
+
+.app-subtitle {
+  margin-top: 8px;
+  font-size: 0.9375rem;
+}
+
+.app-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.app-section--result {
+  margin-top: 8px;
+}
+
+.app-actions {
+  margin: 24px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.empty-state {
+  color: var(--text);
+  font-size: 0.9375rem;
+  padding: 8px 0;
+}
+
+@media (max-width: 640px) {
+  .app-section {
+    padding: 16px;
+  }
+}

@@ -1,41 +1,57 @@
 import type { DayPlan } from "../types/planner";
+import "./DayCard.css";
+
+function getStatusClass(status: DayPlan["status"]) {
+  if (status === "overloaded") return "status-badge--overloaded";
+  if (status === "heavy") return "status-badge--warning";
+  if (status === "light" || status === "rest") return "status-badge--ok";
+  return "status-badge--neutral";
+}
 
 export function DayCard({ dayPlan }: { dayPlan: DayPlan }) {
   return (
     <article className="day-card">
-      <h3>{dayPlan.day}</h3>
-      <p>Energy: {dayPlan.totalEnergy}</p>
-      <p>Status: {dayPlan.status}</p>
+      <header className="day-card__header">
+        <h3>{dayPlan.day}</h3>
+        <div className="day-card__stats">
+          <span>Энергия: {dayPlan.totalEnergy}</span>
+          <span
+            className={`status-badge ${getStatusClass(dayPlan.status)}`}
+          >
+            {dayPlan.status}
+          </span>
+        </div>
+      </header>
 
-      <section>
-        <h4>Fixed events</h4>
+      <section className="day-card__block">
+        <h4>События</h4>
         {dayPlan.fixedEvents.length === 0 ? (
-          <p>No fixed events</p>
+          <p className="empty-state">Нет событий</p>
         ) : (
           <ul>
             {dayPlan.fixedEvents.map((event) => (
-              <li key={event.id}>
+              <li key={event.id} className="day-card__item">
                 <strong>{event.title}</strong>
                 {event.startTime || event.endTime
-                  ? ` — ${event.startTime || "no start time"} - ${event.endTime || "no end time"}`
+                  ? ` — ${event.startTime || "—"} – ${event.endTime || "—"}`
                   : ""}
-                , energy: {event.energyCost}
+                , энергия: {event.energyCost}
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section>
-        <h4>Flexible tasks</h4>
+      <section className="day-card__block">
+        <h4>Задачи</h4>
         {dayPlan.flexibleTasks.length === 0 ? (
-          <p>No flexible tasks</p>
+          <p className="empty-state">Нет задач</p>
         ) : (
           <ul>
             {dayPlan.flexibleTasks.map((task) => (
-              <li key={task.instanceId}>
-                <strong>{task.title}</strong> — priority: {task.priority},
-                duration: {task.durationMinutes} min, energy: {task.energyCost}
+              <li key={task.instanceId} className="day-card__item">
+                <strong>{task.title}</strong> — {task.priority},{" "}
+                {task.durationMinutes} мин, энергия: {task.energyCost}
               </li>
             ))}
           </ul>
