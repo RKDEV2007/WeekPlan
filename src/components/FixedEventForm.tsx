@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Form.css";
 import type { FixedEvent } from "../types/planner";
+import { TimeSelect } from "./TimeSelect";
 
 type FixedEventFormProps = {
   onAddFixedEvent: (event: FixedEvent) => void;
@@ -105,35 +106,29 @@ export function FixedEventForm({ onAddFixedEvent }: FixedEventFormProps) {
         </select>
       </div>
 
-      <div className="form-row">
-        <label htmlFor="fixed-event-start">Начало</label>
-        <input
-          id="fixed-event-start"
-          type="time"
-          value={fixedEvent.startTime}
-          onChange={(e) =>
-            setFixedEvent({
-              ...fixedEvent,
-              startTime: e.target.value,
-            })
-          }
-        />
-      </div>
+      <TimeSelect
+        id="fixed-event-start"
+        label="Начало"
+        value={fixedEvent.startTime ?? ""}
+        onChange={(startTime) =>
+          setFixedEvent({
+            ...fixedEvent,
+            startTime,
+          })
+        }
+      />
 
-      <div className="form-row">
-        <label htmlFor="fixed-event-end">Окончание</label>
-        <input
-          id="fixed-event-end"
-          type="time"
-          value={fixedEvent.endTime}
-          onChange={(e) =>
-            setFixedEvent({
-              ...fixedEvent,
-              endTime: e.target.value,
-            })
-          }
-        />
-      </div>
+      <TimeSelect
+        id="fixed-event-end"
+        label="Окончание"
+        value={fixedEvent.endTime ?? ""}
+        onChange={(endTime) =>
+          setFixedEvent({
+            ...fixedEvent,
+            endTime,
+          })
+        }
+      />
 
       <div className="form-row">
         <label htmlFor="fixed-event-energy">Энергия</label>
