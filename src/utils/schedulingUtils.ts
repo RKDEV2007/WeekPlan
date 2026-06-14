@@ -3,6 +3,7 @@ import {
   canAddTaskToDay,
   canAddTaskToLightDay,
   canAddTaskToRestDay,
+  dayAlreadyHasTaskInstance,
 } from "./plannerRules";
 import { addFlexibleTaskToDay, calculateDayEnergy } from "./weekUtils";
 
@@ -23,8 +24,10 @@ function canAddTaskRespectingDayMode(
     week: WeekPlan,
     task: ScheduledFlexibleTask
   ): DayPlan | undefined {
-    const availableDays = week.filter((day) =>
-      canAddTaskRespectingDayMode(day, task)
+    const availableDays = week.filter(
+      (day) =>
+        !dayAlreadyHasTaskInstance(day, task) &&
+        canAddTaskRespectingDayMode(day, task)
     );
   
     if (availableDays.length === 0) {

@@ -30,6 +30,15 @@ export function canAddTaskToDay(
     return energyAfterAddingTask <= 5;
   }
 
+  export function dayAlreadyHasTaskInstance(
+    day: DayPlan,
+    task: ScheduledFlexibleTask
+  ): boolean {
+    return day.flexibleTasks.some(
+      (scheduledTask) => scheduledTask.sourceTaskId === task.sourceTaskId
+    );
+  }
+
   export function isDayOverloaded(day: DayPlan): boolean {
     return calculateDayEnergy(day) > 10;
   }
